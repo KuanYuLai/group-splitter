@@ -1,0 +1,14 @@
+import express from 'express';
+import { mkdirSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { createApp } from './app.js';
+import { openDb } from './db.js';
+const databasePath = resolve(process.env.DATABASE_PATH ?? 'data/kolo.sqlite');
+mkdirSync(dirname(databasePath), { recursive: true });
+const db = openDb(databasePath);
+const app = createApp(db);
+const clientPath = resolve(process.cwd(), '../client/dist');
+app.use(express.static(clientPath));
+app.get('/{*path}', (_req, res) => res.sendFile(resolve(clientPath, 'index.html')));
+const server = app.listen(Number(process.env.PORT ?? 3001), '127.0.0.1', () => console.log('Kolo is running at http://localhost:' + (process.env.PORT ?? 3001)));
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => server.close(() => { db.close(); process.exit(0); }));

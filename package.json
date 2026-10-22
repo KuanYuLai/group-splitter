@@ -1,0 +1,23 @@
+{
+    "name": "kolo",
+    "private": true,
+    "type": "module",
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "engines": {
+        "node": ">=22.13.0"
+    },
+    "scripts": {
+        "dev": "concurrently -k \"npm run dev -w server\" \"npm run dev -w client\"",
+        "build": "npm run check && npm run build -w client && npm run build -w server",
+        "check": "tsc --noEmit -p client/tsconfig.json && tsc --noEmit -p server/tsconfig.json",
+        "test": "npm run test -w server",
+        "start": "npm run start -w server"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2",
+        "typescript": "^5.8.3"
+    }
+}
