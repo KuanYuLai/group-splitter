@@ -21,6 +21,7 @@ Open http://localhost:5173. Vite proxies `/api` requests to Express on port 3001
 ## Build and run
 
 ```sh
+npm install
 npm run build
 npm start
 ```
